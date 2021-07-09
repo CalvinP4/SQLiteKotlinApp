@@ -1,11 +1,13 @@
 package com.example.sqliteapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.Exception
+
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +44,10 @@ class MainActivity : AppCompatActivity() {
 
             recycler_DisplayCustomers.adapter = adapter
             recycler_DisplayCustomers.layoutManager = LinearLayoutManager(this)
+            val itemDecoration: ItemDecoration =
+                DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+
+            recycler_DisplayCustomers.addItemDecoration(itemDecoration)
         }
     }
 }
