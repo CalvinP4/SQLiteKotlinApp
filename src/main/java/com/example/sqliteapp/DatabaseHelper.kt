@@ -42,6 +42,15 @@ class DatabaseHelper(
         return result != -1L
     }
 
+    fun deleteCustomer(customer: CustomerModel): Boolean {
+        val db = this.writableDatabase
+        val deleteQuery = "DELETE FROM $CUSTOMER_TABLE WHERE $COLUMN_ID = ${customer.Id}"
+
+        val cursor = db.rawQuery(deleteQuery, null)
+
+        return cursor.moveToFirst()
+    }
+
     fun getAllCustomers(): List<CustomerModel> {
         val customers = ArrayList<CustomerModel>()
         val selectAllStatement = "SELECT * FROM $CUSTOMER_TABLE"

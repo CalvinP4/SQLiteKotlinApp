@@ -65,7 +65,7 @@
         app:layout_constraintTop_toBottomOf="@+id/switch_ActiveCustomer" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_DisplayCustomers"
+        android:id="@+id/rv_DisplayCustomers"
         android:layout_width="337dp"
         android:layout_height="407dp"
         android:layout_marginTop="24dp"

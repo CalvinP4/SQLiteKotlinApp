@@ -3,16 +3,22 @@ package com.example.sqliteapp
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity() {
+interface CustomerClickListener {
+    fun onCustomerClickListener(customer: CustomerModel)
+}
+
+class MainActivity : AppCompatActivity(), CustomerClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val db = DatabaseHelper(this)
+
+        showCustomersInRecyclerView()
 
         btn_Add.setOnClickListener {
 
@@ -24,30 +30,38 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, e.message, Toast.LENGTH_LONG).show()
             }
 
+            // TODO remove toast
             Toast.makeText(this, customer.toString(), Toast.LENGTH_LONG).show()
 
-            val db = DatabaseHelper(this)
             val success = db.addCustomer(customer)
 
             if (success) {
+                // TODO remove toast
                 Toast.makeText(this, "SUCCESS", Toast.LENGTH_LONG).show()
+
+
+                showCustomersInRecyclerView()
             }
         }
 
-        btn_ViewAll.setOnClickListener {
-            val db = DatabaseHelper(this)
-            val customers = db.getAllCustomers()
-
-            Toast.makeText(this, customers.toString(), Toast.LENGTH_LONG).show()
-
-            val adapter = CustomerAdapter(customers)
-
-            recycler_DisplayCustomers.adapter = adapter
-            recycler_DisplayCustomers.layoutManager = LinearLayoutManager(this)
-            val itemDecoration: ItemDecoration =
-                DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-
-            recycler_DisplayCustomers.addItemDecoration(itemDecoration)
+        btn_ViewAll.setOnClickListener{
+            showCustomersInRecyclerView()
         }
+    }
+
+    private fun showCustomersInRecyclerView() {
+        val db = DatabaseHelper(this)
+        var adapter = CustomerAdapter(db.getAllCustomers(), this)
+
+        rv_DisplayCustomers.adapter = adapter
+        rv_DisplayCustomers.layoutManager = LinearLayoutManager(this)
+    }
+
+    override fun onCustomerClickListener(customer: CustomerModel) {
+        Toast.makeText(this,customer.toString(), Toast.LENGTH_SHORT).show()
+
+        val db = DatabaseHelper(this)
+        db.deleteCustomer(customer)
+        this.showCustomersInRecyclerView()
     }
 }
